@@ -59,17 +59,30 @@ bool checkOktet(std::string oktetForCheck){
     return(check);
 }
 
+std::string oktetFound(std::string ipForWrite, int length, int start){
+    std::string oktet;
+    start -=1;
+    while(ipForWrite[start+1]!='.'&& start <length){
+        ++start;
+        oktet += ipForWrite[start];
+    }
+
+    return (oktet);
+    }
+
+
+
 bool ipCheck( std::string ipForValid ){
 
-    std::string firstOktet;
-    std::string secundOktet;
-    std::string thirdOktet;
-    std::string fourOktet;
+    std::string firstOktet = oktetFound(ipForValid,3, 0);
+    std::string secundOktet = oktetFound(ipForValid,7, firstOktet.length()+1);
+    std::string thirdOktet = oktetFound(ipForValid,11, secundOktet.length()+firstOktet.length()+2);
+    std::string fourOktet = oktetFound(ipForValid,ipForValid.length(),thirdOktet.length()+secundOktet.length()+firstOktet.length()+3);
 
     bool check= true;
-    int i =-1;
+    //int i =-1;
 
-   while( ipForValid[i+1]!='.'&& i <3){
+   /*while( ipForValid[i+1]!='.'&& i <3){
        ++i;
        firstOktet += ipForValid[i];
    }
@@ -88,7 +101,7 @@ bool ipCheck( std::string ipForValid ){
     while(i<ipForValid.length()){
     ++i;
      fourOktet += ipForValid[i];
-    }
+    }*/
 
     check = checkOktet(firstOktet)&& checkOktet(secundOktet)&&
             checkOktet(thirdOktet)&& checkOktet(fourOktet);
@@ -102,7 +115,7 @@ int main() {
     std::cout << "Enter IP-address" << std::endl;
     std::cin >> ipAddress;
 
-    bool valid = ipCheck(ipAddress)&& ipCheck(ipAddress);
+    bool valid = ipCheck(ipAddress)&& checkDot(ipAddress);
     if(valid == 1){
         std::cout << "IP-address is Valid" << std::endl;
     } else{std::cout<<"IP-address is Invalid"<< std::endl; }
